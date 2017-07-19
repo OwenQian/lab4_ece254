@@ -179,14 +179,16 @@ int main(int argc, char *argv[])
 	printf("WORST FIT TEST CASE 7\n ______________________________\n");
 	
 	res = worst_fit_memory_init(20);
-	if(res == -1) {
-		printf("Test 7 passed\n");
+	if(res != -1) {
+		printf("Worst fit Test 7 failed\n");
+    return -1;
 	}
 //------------TEST CASE 8----------------------//
 	printf("WORST FIT TEST CASE 8\n ______________________________\n");
 	d = worst_fit_alloc(824);
-	if(!d) {
-		printf("Test 8 passed\n");
+	if (d) {
+		printf("Worst fit Test 8 failed\n");
+    return -1;
 	}
 
 //------------TEST CASE 9----------------------//

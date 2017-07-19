@@ -11,17 +11,7 @@
 #include "mem.h"
 #include <stdbool.h>
 
-
 /* defines */
-
-/*typedef struct memNode{
-	
-	bool isAllocated;
-	size_t memAllocatedSize;
-	struct memNode* next;
-	struct memNode* previous;
-
-}memNode;*/
 
 struct memNode *memoryBlock;
 
@@ -34,29 +24,25 @@ int extfrag;
 char * startOfMem;
 
 /* Functions */
-int coalescence(memNode* deallocNode){
+int coalescence(memNode* deallocNode) {
 	if (!deallocNode->next && !deallocNode->previous) {
 		totalFreeMemory += deallocNode->memAllocatedSize;
 		return 0;
 	}
 	
-	if (!deallocNode->previous && deallocNode->next){
+	if (!deallocNode->previous && deallocNode->next) {
 		printf("right there\n");
 
-		if(!deallocNode->next->isAllocated){
+		if(!deallocNode->next->isAllocated) {
 			printf("this\n");
-			deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode); 
+			deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
 			deallocNode->next = deallocNode->next->next;
-
 
 			totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
 		}
-		
 		return 0;
 	} else if(deallocNode->previous && !deallocNode->next) {
-		
-
-		if (!deallocNode-> previous->isAllocated){
+		if (!deallocNode-> previous->isAllocated) {
 
 			iterator = deallocNode->previous;
 			iterator->next = deallocNode->next;
@@ -67,7 +53,6 @@ int coalescence(memNode* deallocNode){
 		return 0;
 	}
 	
-	
 	if (deallocNode-> previous->isAllocated == deallocNode->next->isAllocated){
 		if (!deallocNode->previous->isAllocated) {
 			
@@ -77,34 +62,33 @@ int coalescence(memNode* deallocNode){
 			
 			totalFreeMemory += deallocNode->memAllocatedSize + deallocNode->next->memAllocatedSize + 2*sizeof(memNode);
 		}
-	}else if (!deallocNode-> previous->isAllocated){
+	} else if (!deallocNode-> previous->isAllocated) {
 
 		iterator = deallocNode->previous;
 		iterator->next = deallocNode->next;
-		iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode); 
+		iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
 		
 		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
 		
-	}else if(!deallocNode->next->isAllocated){
-		deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode); 
+	} else if(!deallocNode->next->isAllocated) {
+		deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
 		deallocNode->next = deallocNode->next->next;
 		
 		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
-
-	} else{
+	} else {
 		totalFreeMemory += deallocNode->memAllocatedSize;
 	}
   return 0;
 }
 
-int memInit(size_t size){
-	if (size < (sizeof(memNode)+ sizeof(totalFreeMemory) + sizeof(iterator) + sizeof (difference) + sizeof(extfrag)+ sizeof(startOfMem))){
+int memInit(size_t size) {
+	if (size < (sizeof(memNode) + sizeof(totalFreeMemory) + sizeof(iterator) + sizeof (difference) + sizeof(extfrag)+ sizeof(startOfMem))){
 		return -1;
 	}
 	
 	size = size + size%4;
 
-	startOfMem = malloc(size); 
+	startOfMem = malloc(size);
 	startOfMem += sizeof(memNode)+ sizeof(totalFreeMemory) + sizeof(iterator) + sizeof (difference) + sizeof(extfrag)+ sizeof(startOfMem);
 	size_t temp = sizeof(memNode)+ sizeof(totalFreeMemory) + sizeof(iterator) + sizeof (difference) + sizeof(extfrag)+ sizeof(startOfMem);
 		
@@ -134,7 +118,7 @@ int worst_fit_memory_init(size_t size)
 
 void printLinkedList() {
 	printf("NEW CALL TO PRINT\n");
-	if (!memoryBlock){
+	if (!memoryBlock) {
 		printf ("address of node is NULL\n");
 		return;
 	}
@@ -146,10 +130,9 @@ void printLinkedList() {
 	return;
 }
 
-// TODO there's a bug with worst_fit_alloc ending up with a null allocNode
 void* mem_alloc(size_t size, int flag) {
   printf("totalFreeMemory: %d\n", totalFreeMemory);
-	if (size > totalFreeMemory){
+	if (size > totalFreeMemory) {
 		return NULL;
 	}
 	size += size%4;
@@ -207,7 +190,6 @@ void* mem_alloc(size_t size, int flag) {
 		} else {
 			totalFreeMemory -= allocNode->memAllocatedSize;
 		}
-
 	return allocNode;
 }
 
@@ -241,8 +223,7 @@ void worst_fit_dealloc(void *ptr) {
 /* memory algorithm metric utility function(s) */
 
 /* count how many free blocks are less than the input size */ 
-int best_fit_count_extfrag(size_t size)
-{
+int best_fit_count_extfrag(size_t size) {
 	extfrag = 0;
 	iterator = memoryBlock;
 	while (iterator) {
@@ -254,16 +235,6 @@ int best_fit_count_extfrag(size_t size)
 	return extfrag;
 }
 
-int worst_fit_count_extfrag(size_t size)
-{
-	extfrag = 0;
-	iterator = memoryBlock;
-	while(iterator != NULL){
-		if (!iterator->isAllocated && iterator->memAllocatedSize < size){
-			extfrag += 1;
-		}
-		iterator = iterator->next;	
-	}
-	// To be completed by students
-	return extfrag;
+int worst_fit_count_extfrag(size_t size) {
+  return best_fit_count_extfrag(size);
 }
