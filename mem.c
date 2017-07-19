@@ -94,7 +94,7 @@ int coalescence(memNode* deallocNode){
 	} else{
 		totalFreeMemory += deallocNode->memAllocatedSize;
 	}
-	
+  return 0;
 }
 
 int memInit(size_t size){
@@ -156,8 +156,12 @@ void* mem_alloc(size_t size, int flag) {
 	
 	iterator = memoryBlock;
 	allocNode = NULL;
-	difference = (iterator->isAllocated || (iterator->memAllocatedSize < size)) ?
-    totalFreeMemory : (iterator->memAllocatedSize - size);
+  if (flag == 0) {
+    difference = (iterator->isAllocated || (iterator->memAllocatedSize < size)) ?
+      totalFreeMemory : (iterator->memAllocatedSize - size);
+  } else {
+    difference = 0;
+  }
   while (iterator) {
     if (iterator->isAllocated) {
       iterator = iterator->next;
@@ -176,11 +180,7 @@ void* mem_alloc(size_t size, int flag) {
 		iterator = iterator->next;
   }
 	if (!allocNode) {
-    if (flag == 1) {
-      allocNode = memoryBlock;
-    } else {
       return NULL;
-    }
 	}
 		startOfMem = (char*)allocNode;
 		

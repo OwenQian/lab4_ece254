@@ -101,8 +101,6 @@ int main(int argc, char *argv[])
 	printLinkedList();
   // TODO: problem with this worst_fit_alloc
 	b = worst_fit_alloc(24);
-	printLinkedList();
-  return 0;
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);	
 	printf("WORST FIT TEST CASE 1\n ______________________________\n");
@@ -194,7 +192,7 @@ int main(int argc, char *argv[])
 //------------TEST CASE 9----------------------//
 	printf("WORST FIT TEST CASE 9\n ______________________________\n");	
 	num = best_fit_count_extfrag(824);
-	printf("Num of external fragments (824): %d", num);
+	printf("Num of external fragments (824): %d\n", num);
 
 //---------------------------------------------------------------------//
 

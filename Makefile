@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c99 -g -Wall
+CFLAGS = -std=c99
 
 main: mem.o main_test.c
 	$(CC) $(CFLAGS) -o $@ $^
