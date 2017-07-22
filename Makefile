@@ -4,7 +4,7 @@ CFLAGS = -std=c99 -Wall
 main.out: mem.o main_test.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-mem.o: mem.c mem.h
+mem.o: mem.c mem.h helper.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:

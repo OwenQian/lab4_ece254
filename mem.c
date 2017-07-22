@@ -53,11 +53,33 @@ int coalescence(memNode* deallocNode) {
     return 0;
   }
 
-  if (deallocNode->previous->isAllocated && deallocNode->next->isAllocated){
-    // TODO: do we need to add in sizeof(memNode)?
-    totalFreeMemory += deallocNode->memAllocatedSize;
-    return 0;
-  }
+  if (deallocNode->previous->isAllocated == deallocNode->next->isAllocated) {
+		if (!deallocNode->previous->isAllocated) {
+
+      iterator = deallocNode->previous;
+      iterator->next = deallocNode->next->next;
+      iterator->memAllocatedSize += deallocNode->memAllocatedSize + deallocNode->next->memAllocatedSize + 2*sizeof(memNode); 
+
+      totalFreeMemory += deallocNode->memAllocatedSize + deallocNode->next->memAllocatedSize + 2*sizeof(memNode);
+    } else {
+		iterator = deallocNode->previous;
+		iterator->next = deallocNode->next;
+		iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
+		
+		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
+    }
+  } else if(!deallocNode->previous->isAllocated) {
+    iterator = deallocNode->previous;
+    iterator->next = deallocNode->next->next;
+    iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
+    deallocNode->next->previous = iterator;
+		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
+	} else {
+    deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
+    deallocNode->next = deallocNode->next->next;
+    totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
+	}
+  return 0;
 }
 
 int memInit(size_t size) {

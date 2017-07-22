@@ -1,4 +1,4 @@
-main.dSYM/
+*.dSYM/
 *.o
 main
 main.out
