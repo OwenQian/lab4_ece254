@@ -12,13 +12,13 @@
    Do not include more user-defined header files here
  */
 #include "mem.h"
-
+extern void printLinkedList();
 
 int main(int argc, char *argv[])
 {
 
 	int num = 0;
-	void *p, *q, *a, *b, *c, *d, *e, *f;
+	void *a, *b, *c, *d;
 	int res = -2;
 //------------------------BEST FIT TEST CASES--------------------------------------//	
 	
@@ -197,6 +197,8 @@ int main(int argc, char *argv[])
 	printf("Num of external fragments (824): %d\n", num);
 
 //---------------------------------------------------------------------//
+
+//------------ Fragmentation test -------------//
 
 	return 0;
 }

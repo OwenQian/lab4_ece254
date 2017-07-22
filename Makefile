@@ -1,11 +1,11 @@
 CC = gcc
-CFLAGS = -std=c99
+CFLAGS = -std=c99 -Wall
 
-main: mem.o main_test.c
+main.out: mem.o main_test.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 mem.o: mem.c mem.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f main mem.o
+	rm -f main.out mem.o
