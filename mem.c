@@ -139,8 +139,7 @@ void* mem_alloc(size_t size, int flag) {
   iterator = memoryBlock;
   allocNode = NULL;
   if (flag == 0) {
-    difference = (iterator->isAllocated || (iterator->memAllocatedSize < size)) ?
-      totalFreeMemory : (iterator->memAllocatedSize - size);
+    difference = totalFreeMemory;
   } else {
     difference = 0;
   }
@@ -168,7 +167,7 @@ void* mem_alloc(size_t size, int flag) {
   startOfMem = (char*)allocNode;
   allocNode->isAllocated = true;
 
-  if (difference > sizeof(memNode)) {
+  if (!((allocNode->memAllocatedSize - size) < sizeof(memNode))) {
     startOfMem += sizeof(memNode) + size;
 
     iterator = (memNode*)startOfMem;
