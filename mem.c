@@ -26,6 +26,32 @@ int extfrag;
 char * startOfMem;
 
 /* Functions */
+void printLinkedList() {
+  printf("NEW CALL TO PRINT\n");
+  if (!memoryBlock) {
+    printf ("address of node is NULL\n");
+    return;
+  }
+  iterator = memoryBlock;
+  while (iterator) {
+    printf ("Start address: %p\nisAllocated: %d\nsize: %zu\n------------------\n",iterator, iterator->isAllocated, iterator->memAllocatedSize);
+    iterator = iterator->next;
+  }
+  return;
+}
+
+void print_list() {
+	memNode* node = memoryBlock;
+	while(node) {
+		printf("%d->", node->isAllocated);
+		
+		node = node->next;
+	}
+	
+	printf("NULL\n");
+	
+}
+
 int coalescence(memNode* deallocNode) {
   if (!deallocNode->next && !deallocNode->previous) {
     totalFreeMemory += deallocNode->memAllocatedSize;
@@ -35,6 +61,10 @@ int coalescence(memNode* deallocNode) {
   if (!deallocNode->previous && deallocNode->next) {
     if(!deallocNode->next->isAllocated) {
       deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
+	  
+	  if(deallocNode->next->next){
+		 deallocNode->next->next->previous = deallocNode;
+	  }
       deallocNode->next = deallocNode->next->next;
 
       totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
@@ -46,6 +76,9 @@ int coalescence(memNode* deallocNode) {
     if (!deallocNode->previous->isAllocated) {
       iterator = deallocNode->previous;
       iterator->next = deallocNode->next;
+	  if (deallocNode->next){
+		  deallocNode->next->previous =iterator;
+	  }
       iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
 
       totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
@@ -54,30 +87,35 @@ int coalescence(memNode* deallocNode) {
   }
 
   if (deallocNode->previous->isAllocated == deallocNode->next->isAllocated) {
-		if (!deallocNode->previous->isAllocated) {
-
+	if (!deallocNode->previous->isAllocated) {
+		
       iterator = deallocNode->previous;
+	  
       iterator->next = deallocNode->next->next;
+	  
+	  if(deallocNode->next->next){
+		  deallocNode->next->next->previous = iterator;
+	  }
+	printf("iterator->ad: %p  dealloc->ad: %p \n", iterator, deallocNode);
+		
       iterator->memAllocatedSize += deallocNode->memAllocatedSize + deallocNode->next->memAllocatedSize + 2*sizeof(memNode); 
 
       totalFreeMemory += deallocNode->memAllocatedSize + deallocNode->next->memAllocatedSize + 2*sizeof(memNode);
-    } else {
+		
+	} else {
+		totalFreeMemory += deallocNode->memAllocatedSize;
+    }
+  } else if(!deallocNode->previous->isAllocated) {
+	  
 		iterator = deallocNode->previous;
 		iterator->next = deallocNode->next;
 		iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
-		
-		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
-    }
-  } else if(!deallocNode->previous->isAllocated) {
-    iterator = deallocNode->previous;
-    iterator->next = deallocNode->next->next;
-    iterator->memAllocatedSize += deallocNode->memAllocatedSize + sizeof(memNode);
-    deallocNode->next->previous = iterator;
+		deallocNode->next->previous = iterator;
 		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
 	} else {
-    deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
-    deallocNode->next = deallocNode->next->next;
-    totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
+		deallocNode->memAllocatedSize += deallocNode->next->memAllocatedSize + sizeof(memNode);
+		deallocNode->next = deallocNode->next->next;
+		totalFreeMemory += deallocNode->memAllocatedSize + sizeof(memNode);
 	}
   return 0;
 }
@@ -116,19 +154,9 @@ int worst_fit_memory_init(size_t size)
 
 /* memory allocators */
 
-void printLinkedList() {
-  printf("NEW CALL TO PRINT\n");
-  if (!memoryBlock) {
-    printf ("address of node is NULL\n");
-    return;
-  }
-  iterator = memoryBlock;
-  while (iterator) {
-    printf ("Start address: %p\nisAllocated: %d\nsize: %zu\n------------------\n",iterator, iterator->isAllocated, iterator->memAllocatedSize);
-    iterator = iterator->next;
-  }
-  return;
-}
+
+
+
 
 void* mem_alloc(size_t size, int flag) {
   if (size > totalFreeMemory) {
