@@ -273,7 +273,13 @@ void *worst_fit_alloc(size_t size)
 
 void mem_dealloc(void *ptr)
 {
-  iterator = (memNode *)ptr;
+  iterator = memoryBlock;
+  while (iterator) {
+    if (iterator == (memNode*) ptr) {
+      break;
+    }
+    iterator = iterator->next;
+  }
   if (!iterator)
   {
     return;
@@ -315,4 +321,12 @@ int best_fit_count_extfrag(size_t size)
 int worst_fit_count_extfrag(size_t size)
 {
   return best_fit_count_extfrag(size);
+}
+
+void clear_allocs() {
+  iterator = memoryBlock;
+  while (iterator) {
+    mem_dealloc(iterator);
+    iterator = iterator->next;
+  }
 }

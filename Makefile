@@ -1,6 +1,6 @@
 TARGET = main.out
 CC = gcc
-CFLAGS = -std=c99 -Wall
+CFLAGS = -std=c99 -Wall -g
 
 .PHONY: default all clean
 

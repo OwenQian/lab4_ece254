@@ -7,12 +7,15 @@
 /* includes */
 /* system provided header files. You may add more */
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /* non-system provided header files. 
    Do not include more user-defined header files here
  */
 #include "mem.h"
 extern void printLinkedList();
+extern void clear_allocs();
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +31,7 @@ int main(int argc, char *argv[])
 	a = best_fit_alloc(12);
 	b = best_fit_alloc(24);
 	c = best_fit_alloc(22);
-	d = best_fit_alloc(8);	
+	d = best_fit_alloc(8);
 
 	printLinkedList();
 	best_fit_dealloc(c);
@@ -99,7 +102,6 @@ int main(int argc, char *argv[])
 //-------------TEST CASE 1----------------------//	
 	a = worst_fit_alloc(12);
 	printLinkedList();
-  // TODO: problem with this worst_fit_alloc
 	b = worst_fit_alloc(24);
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);	
@@ -132,7 +134,7 @@ int main(int argc, char *argv[])
 	a = worst_fit_alloc(12);
 	b = worst_fit_alloc(24);
 	c = worst_fit_alloc(22);
-	d = worst_fit_alloc(8);		
+	d = worst_fit_alloc(8);
 	
 	printLinkedList();
 	worst_fit_dealloc(b);
@@ -199,6 +201,51 @@ int main(int argc, char *argv[])
 //---------------------------------------------------------------------//
 
 //------------ Fragmentation test -------------//
+  size_t cnt = 0;
+  int iterations = 15;
+  int allocsPerIt = 5;
+  int deallocsPerIt = 3;
+  void* allocationPtr[iterations*allocsPerIt];
+  int poolSize = 8196;
+  time_t t;
+  int bestAvg = 0;
+  int worstAvg = 0;
+  int numRepeats = 50;
 
+  srand((unsigned) time(&t));
+  best_fit_memory_init(poolSize);
+  for (int repeat = 0; repeat < numRepeats; ++repeat) {
+    cnt = 0;
+    clear_allocs();
+    for (int i = 0; i < iterations; i++) {
+      for (int j = 0; j < allocsPerIt; j++) {
+        int size = rand()%poolSize;
+        allocationPtr[cnt++] = best_fit_alloc(size);
+      }
+      for (int j = 0; j < deallocsPerIt; j++) {
+        best_fit_dealloc(allocationPtr[rand()%cnt]);
+      }
+    }
+    printf("Best fit 10%% size: %d\n", best_fit_count_extfrag(poolSize/20));
+    bestAvg += best_fit_count_extfrag(poolSize/10);
+  }
+  printf("Best fit AVERAGE 10%% size: %f\n", (double) bestAvg/(double)numRepeats);
+  worst_fit_memory_init(poolSize);
+  for (int repeat = 0; repeat < numRepeats; ++repeat) {
+    cnt = 0;
+    clear_allocs();
+    for (int i = 0; i < iterations; i++) {
+      for (int j = 0; j < allocsPerIt; j++) {
+        int size = rand()%poolSize;
+        allocationPtr[cnt++] = worst_fit_alloc(size);
+      }
+      for (int j = 0; j < deallocsPerIt; j++) {
+        worst_fit_dealloc(allocationPtr[rand()%cnt]);
+      }
+    }
+    printf("Worst fit 10%% size: %d\n", worst_fit_count_extfrag(poolSize/10));
+    worstAvg += worst_fit_count_extfrag(poolSize/10);
+  }
+  printf("Worst fit average 10%% size: %f\n", (double) worstAvg/(double)numRepeats);
 	return 0;
 }
