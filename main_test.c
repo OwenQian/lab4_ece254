@@ -182,8 +182,11 @@ int main(int argc, char *argv[])
   int worstAvg = 0;
   int numRepeats = 50;
 
+. // generate time seed
   srand((unsigned) time(&t));
   best_fit_memory_init(poolSize);
+. // repeat the allocation and deallocatiom process and keep
+. // running sum. 
   for (int repeat = 0; repeat < numRepeats; ++repeat) {
     cnt = 0;
     for (int i = 0; i < iterations; i++) {
