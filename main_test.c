@@ -14,8 +14,6 @@
    Do not include more user-defined header files here
  */
 #include "mem.h"
-extern void printLinkedList();
-extern void clear_allocs();
 
 int main(int argc, char *argv[])
 {
@@ -27,47 +25,35 @@ int main(int argc, char *argv[])
 	
 	best_fit_memory_init(1023);	// initizae 1KB, best fit
 //-------------TEST CASE 1----------------------//	
-  printLinkedList();
 	a = best_fit_alloc(12);
 	b = best_fit_alloc(24);
 	c = best_fit_alloc(22);
 	d = best_fit_alloc(8);
 
-	printLinkedList();
 	best_fit_dealloc(c);
-	printLinkedList();	
 
 //------------TEST CASE 2----------------------//
 
 	best_fit_dealloc(d);
-	printLinkedList();	
 //------------TEST CASE 3----------------------//
 
 	c = best_fit_alloc(22);
 	d = best_fit_alloc(8);	
 	
-	printLinkedList();
 	best_fit_dealloc(b);
 	best_fit_dealloc(c);
-	printLinkedList();
 	
 //------------TEST CASE 4----------------------//
 	b = best_fit_alloc(24);
-	printLinkedList();
 	best_fit_dealloc(b);
-	printLinkedList();
 	
 //------------TEST CASE 5----------------------//
 	b = best_fit_alloc(24);
 	c = best_fit_alloc(22);
-	printLinkedList();
 	best_fit_dealloc(a);
-	printLinkedList();
 //------------TEST CASE 6----------------------//
 	a = best_fit_alloc(12);
-	printLinkedList();
 	best_fit_dealloc(c);
-	printLinkedList();
 	c = best_fit_alloc(22);
 
 //------------TEST CASE 7----------------------//
@@ -101,19 +87,15 @@ int main(int argc, char *argv[])
 	worst_fit_memory_init(1023);	// initizae 1KB, worst fit
 //-------------TEST CASE 1----------------------//	
 	a = worst_fit_alloc(12);
-	printLinkedList();
 	b = worst_fit_alloc(24);
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);	
 	printf("WORST FIT TEST CASE 1\n ______________________________\n");
 
-	printLinkedList();
 	worst_fit_dealloc(c);
-	printLinkedList();
 	worst_fit_dealloc(a);
 	worst_fit_dealloc(b);
 	worst_fit_dealloc(d);
-	printLinkedList();
 
 
 //------------TEST CASE 2----------------------//
@@ -124,11 +106,9 @@ int main(int argc, char *argv[])
 	d = worst_fit_alloc(8);	
 	
 	worst_fit_dealloc(d);
-	printLinkedList();	
 	worst_fit_dealloc(a);
 	worst_fit_dealloc(b);
 	worst_fit_dealloc(c);
-	printLinkedList();
 //------------TEST CASE 3----------------------//
 	printf("WORST FIT TEST CASE 3\n ______________________________\n");
 	a = worst_fit_alloc(12);
@@ -136,13 +116,10 @@ int main(int argc, char *argv[])
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);
 	
-	printLinkedList();
 	worst_fit_dealloc(b);
 	worst_fit_dealloc(c);
-	printLinkedList();
 	worst_fit_dealloc(a);
 	worst_fit_dealloc(d);
-	printLinkedList();
 
 	
 //------------TEST CASE 4----------------------//
@@ -152,13 +129,10 @@ int main(int argc, char *argv[])
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);
 	
-	printLinkedList();
 	worst_fit_dealloc(d);
-	printLinkedList();
 	worst_fit_dealloc(a);
 	worst_fit_dealloc(b);
 	worst_fit_dealloc(c);
-	printLinkedList();
 	
 //------------TEST CASE 5----------------------//
 	printf("WORST FIT TEST CASE 5\n ______________________________\n");
@@ -167,15 +141,11 @@ int main(int argc, char *argv[])
 	c = worst_fit_alloc(22);
 	d = worst_fit_alloc(8);
 	
-	printLinkedList();
 	worst_fit_dealloc(a);
-	printLinkedList();
 //------------TEST CASE 6----------------------//
 	printf("WORST FIT TEST CASE 6\n ______________________________\n");
 	a = best_fit_alloc(12);
-	printLinkedList();
 	worst_fit_dealloc(d);
-	printLinkedList();
 
 //------------TEST CASE 7----------------------//
 	printf("WORST FIT TEST CASE 7\n ______________________________\n");
@@ -216,7 +186,6 @@ int main(int argc, char *argv[])
   best_fit_memory_init(poolSize);
   for (int repeat = 0; repeat < numRepeats; ++repeat) {
     cnt = 0;
-    clear_allocs();
     for (int i = 0; i < iterations; i++) {
       for (int j = 0; j < allocsPerIt; j++) {
         int size = rand()%poolSize;
@@ -233,7 +202,6 @@ int main(int argc, char *argv[])
   worst_fit_memory_init(poolSize);
   for (int repeat = 0; repeat < numRepeats; ++repeat) {
     cnt = 0;
-    clear_allocs();
     for (int i = 0; i < iterations; i++) {
       for (int j = 0; j < allocsPerIt; j++) {
         int size = rand()%poolSize;
