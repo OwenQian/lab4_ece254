@@ -2,6 +2,7 @@
 #define __HELPER_H
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct memNode{
 	bool isAllocated;
@@ -14,5 +15,8 @@ void* mem_alloc(size_t, int);
 void mem_dealloc(void*);
 
 void printLinkedList();
+
+void linkedListAppend();
+void linkedListRemove();
 
 #endif  // __HELPER_H

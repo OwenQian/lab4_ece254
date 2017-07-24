@@ -1,11 +1,21 @@
+TARGET = main.out
 CC = gcc
 CFLAGS = -std=c99 -Wall
 
-main.out: mem.o main_test.c
-	$(CC) $(CFLAGS) -o $@ $^
+.PHONY: default all clean
 
-mem.o: mem.c mem.h helper.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+default: $(TARGET)
+all: default
+
+OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) $(CFLAGS) -o $@
 
 clean:
-	rm -f main.out mem.o
+	rm -f *.o
+	rm -f $(TARGET)

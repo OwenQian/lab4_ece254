@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 //------------TEST CASE 9----------------------//
 	num = best_fit_count_extfrag(824);
 	printf("Num of external fragments (824): %d\n", num);
-  if (num != 4) {
+  if (num != 2) {
 		printf("Best fit Test 9 failed\n");
     return -1;
   }
